@@ -23,6 +23,8 @@ interface PRDetails {
   description: string;
 }
 
+
+
 async function getPRDetails(): Promise<PRDetails> {
   const { repository, number } = JSON.parse(
     readFileSync(process.env.GITHUB_EVENT_PATH || "", "utf8")
@@ -180,6 +182,7 @@ async function safeCreateReview(
     const batch = comments.slice(i, i + MAX_BATCH_SIZE);
 
     try {
+      console.log(`Creating review with ${batch.length} comments...`);
       const response = await octokit.pulls.createReview({
         owner,
         repo,
@@ -232,7 +235,7 @@ async function createReviewComment(
 }
 
 async function main() {
-  console.log(
+  console.log("starting review process...");
   const prDetails = await getPRDetails();
   let diff: string | null;
   const eventData = JSON.parse(
@@ -282,8 +285,11 @@ async function main() {
       minimatch(file.to ?? "", pattern)
     );
   });
-
+  
+  console.log("calling ai to analyze code...");
   const comments = await analyzeCode(filteredDiff, prDetails);
+
+  console.log(`AI suggested ${comments.length} comments.`);
   if (comments.length > 0) {
     await safeCreateReview(
       prDetails.owner,
