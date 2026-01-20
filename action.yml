@@ -15,6 +15,10 @@ inputs:
     description: "Glob patterns to exclude files from the diff analysis"
     required: false
     default: ""
+  MAX_COMMENTS:
+    description: "Maximum number of review comments per PR (to avoid noise and rate limits)"
+    required: false
+    default: "10"
 runs:
   using: "node16"
   main: "dist/index.js"
