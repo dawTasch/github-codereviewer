@@ -4,6 +4,7 @@ import OpenAI from "openai";
 import { Octokit } from "@octokit/rest";
 import parseDiff, { File } from "parse-diff";
 import minimatch from "minimatch";
+import { VERSION } from "./version";
 
 const GITHUB_TOKEN: string = core.getInput("GITHUB_TOKEN");
 const OPENAI_API_KEY: string = core.getInput("OPENAI_API_KEY");
@@ -207,7 +208,7 @@ function createComment(
       return [];
     }
     return {
-      body: aiResponse.reviewComment,
+      body: `${aiResponse.reviewComment}\n\n---\n*AI Code Reviewer · version \`${VERSION}\`*`,
       path: file.to,
       line: Number(aiResponse.lineNumber),
     };
