@@ -29,7 +29,7 @@ interface PRDetails {
 }
 
 async function getPRDetails(): Promise<PRDetails> {
-  const { repository, number } = JSON.parse(
+  const { repository, number, action, before, after } = JSON.parse(
     readFileSync(process.env.GITHUB_EVENT_PATH || "", "utf8")
   );
 
@@ -44,7 +44,9 @@ async function getPRDetails(): Promise<PRDetails> {
     pull_number: number,
     title: prResponse.data.title ?? "",
     description: prResponse.data.body ?? "",
-    action: repository.action
+    action,
+    before,
+    after,
   };
 }
 
