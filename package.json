@@ -7,7 +7,8 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "package": "ncc build --source-map --license licenses.txt",
+    "generate-version": "node scripts/generate-version.js",
+    "package": "npm run generate-version && npm run build && ncc build --source-map --license licenses.txt",
     "format": "prettier --write .",
     "lint": "prettier --check ."
   },
